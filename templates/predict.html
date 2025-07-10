@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="predict-form">
+    <h2>Car Price Prediction</h2>
+    <p>Fill in the car details to get a price prediction:</p>
+    
+    <!-- ===== ERROR MESSAGES SECTION - ADD THIS ===== -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="error-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <!-- ===== END OF ERROR MESSAGES SECTION ===== -->
+    
+    <form method="POST" action="{{ url_for('predict') }}">
+        <div class="form-grid">
+            <!-- Basic Info -->
+            <div class="form-group">
+                <label for="symboling">Symboling (Risk Factor):</label>
+                <input type="number" id="symboling" name="symboling" min="-2" max="3" value="0" required>
+                <small>Range: -2 to 3 (Example: 0)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="fuel_type">Fuel Type:</label>
+                <select id="fuel_type" name="fuel_type" required>
+                    {% for fuel in dropdown_values['fuel_types'] %}
+                    <option value="{{ fuel }}">{{ fuel }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="aspiration">Aspiration:</label>
+                <select id="aspiration" name="aspiration" required>
+                    {% for asp in dropdown_values['aspirations'] %}
+                    <option value="{{ asp }}">{{ asp }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Body/Structure -->
+            <div class="form-group">
+                <label for="doors">Number of Doors:</label>
+                <select id="doors" name="doors" required>
+                    {% for door in dropdown_values['doors'] %}
+                    <option value="{{ door }}">{{ door }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="body">Car Body:</label>
+                <select id="body" name="body" required>
+                    {% for body in dropdown_values['bodies'] %}
+                    <option value="{{ body }}">{{ body }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="drive_wheel">Drive Wheel:</label>
+                <select id="drive_wheel" name="drive_wheel" required>
+                    {% for wheel in dropdown_values['drive_wheels'] %}
+                    <option value="{{ wheel }}">{{ wheel }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="engine_location">Engine Location:</label>
+                <select id="engine_location" name="engine_location" required>
+                    {% for loc in dropdown_values['engine_locations'] %}
+                    <option value="{{ loc }}">{{ loc }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Dimensions -->
+            <div class="form-group">
+                <label for="wheel_base">Wheel Base (inches):</label>
+                <input type="number" id="wheel_base" name="wheel_base" step="0.1" min="86.6" max="120.9" value="100" required>
+                <small>Range: 86.6 to 120.9 (Example: 100.4)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="car_length">Car Length (inches):</label>
+                <input type="number" id="car_length" name="car_length" step="0.1" min="141.1" max="208.1" value="175" required>
+                <small>Range: 141.1 to 208.1 (Example: 175.4)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="car_width">Car Width (inches):</label>
+                <input type="number" id="car_width" name="car_width" step="0.1" min="60.3" max="72.3" value="65" required>
+                <small>Range: 60.3 to 72.3 (Example: 65.2)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="car_height">Car Height (inches):</label>
+                <input type="number" id="car_height" name="car_height" step="0.1" min="47.8" max="59.8" value="55" required>
+                <small>Range: 47.8 to 59.8 (Example: 55.1)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="curb_weight">Curb Weight (lbs):</label>
+                <input type="number" id="curb_weight" name="curb_weight" min="1488" max="4066" value="2500" required>
+                <small>Range: 1488 to 4066 (Example: 2500)</small>
+            </div>
+            
+            <!-- Engine Specifications -->
+            <div class="form-group">
+                <label for="engine_type">Engine Type:</label>
+                <select id="engine_type" name="engine_type" required>
+                    {% for eng in dropdown_values['engine_types'] %}
+                    <option value="{{ eng }}">{{ eng }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="cylinders">Cylinders:</label>
+                <select id="cylinders" name="cylinders" required>
+                    {% for cyl in dropdown_values['cylinders'] %}
+                    <option value="{{ cyl }}">{{ cyl }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="engine_size">Engine Size (cc):</label>
+                <input type="number" id="engine_size" name="engine_size" min="61" max="326" value="120" required>
+                <small>Range: 61 to 326 (Example: 120)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="fuel_system">Fuel System:</label>
+                <select id="fuel_system" name="fuel_system" required>
+                    {% for fuel_sys in dropdown_values['fuel_systems'] %}
+                    <option value="{{ fuel_sys }}">{{ fuel_sys }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Engine Metrics -->
+            <div class="form-group">
+                <label for="bore_ratio">Bore Ratio:</label>
+                <input type="number" id="bore_ratio" name="bore_ratio" step="0.01" min="2.54" max="3.94" value="3.2" required>
+                <small>Range: 2.54 to 3.94 (Example: 3.19)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="stroke">Stroke:</label>
+                <input type="number" id="stroke" name="stroke" step="0.01" min="2.07" max="4.17" value="3.4" required>
+                <small>Range: 2.07 to 4.17 (Example: 3.4)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="compression">Compression Ratio:</label>
+                <input type="number" id="compression" name="compression" step="0.1" min="7.0" max="23.0" value="9" required>
+                <small>Range: 7.0 to 23.0 (Example: 9.0)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="horsepower">Horsepower:</label>
+                <input type="number" id="horsepower" name="horsepower" min="48" max="288" value="100" required>
+                <small>Range: 48 to 288 (Example: 100)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="peak_rpm">Peak RPM:</label>
+                <input type="number" id="peak_rpm" name="peak_rpm" min="4150" max="6600" value="5000" required>
+                <small>Range: 4150 to 6600 (Example: 5000)</small>
+            </div>
+            
+            <!-- Performance -->
+            <div class="form-group">
+                <label for="city_mpg">City MPG:</label>
+                <input type="number" id="city_mpg" name="city_mpg" min="13" max="49" value="25" required>
+                <small>Range: 13 to 49 (Example: 25)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="highway_mpg">Highway MPG:</label>
+                <input type="number" id="highway_mpg" name="highway_mpg" min="16" max="54" value="30" required>
+                <small>Range: 16 to 54 (Example: 30)</small>
+            </div>
+            
+            <div class="form-group full-width">
+                <button type="submit" class="btn">Predict Price</button>
+            </div>
+        </div>
+    </form>
+</section>
+{% endblock %}

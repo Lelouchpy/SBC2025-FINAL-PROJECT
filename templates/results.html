@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="results">
+    <h2>Prediction Results</h2>
+    
+    <div class="result-card">
+        <h3>Estimated Car Price:</h3>
+        <p class="price">${{ predicted_price }}</p>
+        
+        <div class="car-details">
+            <h4>Car Details:</h4>
+            <ul>
+                <li><strong>Body:</strong> {{ form_data['body'] }}</li>
+                <li><strong>Fuel Type:</strong> {{ form_data['fuel_type'] }}</li>
+                <li><strong>Engine Size:</strong> {{ form_data['engine_size'] }} cc</li>
+                <li><strong>Horsepower:</strong> {{ form_data['horsepower'] }}</li>
+                <li><strong>Drive Wheel:</strong> {{ form_data['drive_wheel'] }}</li>
+            </ul>
+        </div>
+        
+        <a href="{{ url_for('predict') }}" class="btn">Make Another Prediction</a>
+    </div>
+</section>
+{% endblock %}

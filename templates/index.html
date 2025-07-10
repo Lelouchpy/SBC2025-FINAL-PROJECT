@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h2>Predict Car Prices with Machine Learning</h2>
+        <p>Our advanced Random Forest model can estimate car prices based on various features.</p>
+        <a href="{{ url_for('predict') }}" class="btn">Try It Now</a>
+    </div>
+</section>
+
+<section class="features">
+    <div class="feature-card">
+        <h3>Accurate Predictions</h3>
+        <p>Using a trained Random Forest model with high accuracy.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Easy to Use</h3>
+        <p>Simple form with dropdowns for all features.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Modern Interface</h3>
+        <p>Clean, responsive design without Bootstrap.</p>
+    </div>
+</section>
+{% endblock %}
